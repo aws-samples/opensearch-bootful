@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: "bootful opensearch"
+aws:
+  os:
+    region: region
+    endpoint: endpoint
+  iam:
+    role: roleARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
