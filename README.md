@@ -14,7 +14,7 @@ other mechanisms to secure the API and dynamically attach the role to the API de
 ## Prerequisites
 
 1. Create an Amazon OpenSearch cluster using this [guide](https://medium.com/@neuw84/securing-amazon-opensearch-service-dashboards-with-amazon-cognito-1f0b784cab3b).
-2. Follow this blog post in order to setup the required IAM roles used by the app (**To-DO**)
+2. Follow this [blog post](https://medium.com/@neuw84/integrating-springboot-apps-on-a-secured-amazon-opensearch-application-33760bdaf55a) in order to setup the required IAM roles used by the app.
 
 Amazon OpenSearch provides the following endpoints
 
