@@ -19,24 +19,25 @@ package com.aws.samples.opensearch;
 
 import com.aws.samples.opensearch.model.Customer;
 import com.aws.samples.opensearch.repository.CustomerRepository;
-import com.github.javafaker.Faker;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import net.datafaker.Faker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 
 import lombok.extern.slf4j.Slf4j;
-@SpringBootApplication
 @Slf4j
+@SpringBootApplication(exclude = {ElasticsearchDataAutoConfiguration.class})
 public class SpringBootElasticSearchApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootElasticSearchApplication.class, args);

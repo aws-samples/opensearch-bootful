@@ -4,9 +4,9 @@ spring:
 aws:
   os:
     region: region
-    endpoint: endpoint
+    endpoint: "endpoint:port"
   iam:
-    role: roleARN
+    role: arn
 
 management:
   endpoints:
