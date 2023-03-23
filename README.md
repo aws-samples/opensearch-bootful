@@ -47,10 +47,6 @@ You can use [Postman](https://www.postman.com/) to interact with the API. The AP
 - Start to input some characters in the search box, which will open an auto-complete box of maximum 5 suggestions.
 - Complete the search text and click search button to see the search results.
 
-## Notes:
-
-The project will be updated when **spring-data-opensearch** is available. As by now it uses the latest AWS
-recommended version of Elastic library ([docs](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/samplecode.html#client-compatibility)).
 
 ## Security
 
