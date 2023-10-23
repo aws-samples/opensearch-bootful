@@ -23,7 +23,7 @@ Amazon OpenSearch provides the following endpoints
 
 ## Config
 
-Provide the following configuration in the ```application.yaml``` file
+Provide the following configuration in the ```application.yml``` file
 
 1. ```aws.os.region=aws-region-you-are-using```
 2. ```aws.os.endpoint=opensearch-domain-endpoint```
