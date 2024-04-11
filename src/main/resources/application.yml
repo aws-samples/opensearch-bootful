@@ -3,10 +3,10 @@ spring:
     name: "bootful opensearch"
 aws:
   os:
-    region: region
-    endpoint: "endpoint:port"
+    region: "region"
+    endpoint: "url:port"
   iam:
-    role: arn
+    role: "rolearn"
 
 management:
   endpoints:
