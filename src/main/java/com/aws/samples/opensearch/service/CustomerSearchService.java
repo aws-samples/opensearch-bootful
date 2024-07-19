@@ -19,10 +19,12 @@ package com.aws.samples.opensearch.service;
 
 import com.aws.samples.opensearch.model.Customer;
 import lombok.extern.slf4j.Slf4j;
-import org.opensearch.common.unit.Fuzziness;
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.opensearch._types.FieldValue;
+import org.opensearch.client.opensearch._types.query_dsl.QueryBuilders;
 import org.opensearch.data.client.orhlc.NativeSearchQueryBuilder;
-import org.opensearch.index.query.QueryBuilder;
-import org.opensearch.index.query.QueryBuilders;
+import org.opensearch.data.client.osc.NativeQuery;
+import org.opensearch.data.client.osc.NativeQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -49,10 +51,13 @@ public class CustomerSearchService {
 
     private final ElasticsearchOperations elasticsearchOperations;
 
+    private  OpenSearchClient client;
+
     @Autowired
-    public CustomerSearchService(final ElasticsearchOperations elasticsearchOperations) {
+    public CustomerSearchService(final ElasticsearchOperations elasticsearchOperations, OpenSearchClient client) {
         super();
         this.elasticsearchOperations = elasticsearchOperations;
+        this.client = client;
     }
 
     public List<IndexedObjectInformation> createProductIndexBulk(final List<Customer> products) {
@@ -73,18 +78,10 @@ public class CustomerSearchService {
     }
 
     public void findByLastName(final String lastName) {
-        QueryBuilder queryBuilder = QueryBuilders
-                .matchQuery("lastname", lastName);
-        // we can customize the query parameters if needed
-        // .fuzziness(0.8)
-        // .boost(1.0f)
-        // .prefixLength(0)
-        // .fuzzyTranspositions(true);
 
-        Query searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(queryBuilder)
-                .build();
+        var match= QueryBuilders.match().field("lastname").query(FieldValue.of(lastName)).fuzziness("AUTO").build();
 
+        NativeQuery searchQuery = new NativeQueryBuilder().withQuery(match).build();
         SearchHits<Customer> productHits =
                 elasticsearchOperations
                         .search(searchQuery, Customer.class,
@@ -121,14 +118,11 @@ public class CustomerSearchService {
         log.info("Search with query {}", query);
 
         // 1. Create query on multiple fields enabling fuzzy search
-        QueryBuilder queryBuilder =
-                QueryBuilders
-                        .multiMatchQuery(query, "firstName", "lastName")
-                        .fuzziness(Fuzziness.AUTO);
 
-        Query searchQuery = new NativeSearchQueryBuilder()
-                .withFilter(queryBuilder)
-                .build();
+        var match= QueryBuilders.multiMatch().fields("firstName","lastName").query(query).fuzziness("AUTO").build();
+
+        NativeQuery searchQuery = new NativeQueryBuilder().withQuery(match).build();
+
 
         // 2. Execute search
         SearchHits<Customer> productHits =
@@ -144,13 +138,9 @@ public class CustomerSearchService {
 
 
     public List<String> fetchSuggestions(String query) {
-        QueryBuilder queryBuilder = QueryBuilders
-                .wildcardQuery("firstName", query + "*");
 
-        Query searchQuery = new NativeSearchQueryBuilder()
-                .withFilter(queryBuilder)
-                .withPageable(PageRequest.of(0, 5))
-                .build();
+        var match= QueryBuilders.wildcard().field("firstName").value(query + "*").build();
+        NativeQuery searchQuery = new NativeQueryBuilder().withQuery(match).withPageable(PageRequest.of(0, 5)).build();
 
         SearchHits<Customer> searchSuggestions =
                 elasticsearchOperations.search(searchQuery,
@@ -158,9 +148,7 @@ public class CustomerSearchService {
                         IndexCoordinates.of(BOOTFULSEARCH));
 
         List<String> suggestions = new ArrayList<>();
-
         searchSuggestions.getSearchHits().forEach(searchHit -> suggestions.add(searchHit.getContent().getFirstName()));
         return suggestions;
     }
-
 }

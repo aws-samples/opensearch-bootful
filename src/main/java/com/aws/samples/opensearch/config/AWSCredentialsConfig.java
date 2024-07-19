@@ -65,6 +65,7 @@ public class AWSCredentialsConfig {
         AssumeRoleRequest.builder().roleArn(roleArn).roleSessionName(roleSessionName).build();
 
     AssumeRoleResponse roleResponse = stsClient.assumeRole(roleRequest);
+    log.error(roleResponse.toString());
 
     return StsAssumeRoleCredentialsProvider.builder()
         .stsClient(stsClient)
